@@ -7,4 +7,8 @@
     <RootNamespace>Group1_Expense_Tracker</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Firebase.Auth" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>
