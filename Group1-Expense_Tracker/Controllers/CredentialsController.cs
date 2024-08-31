@@ -60,5 +60,10 @@ namespace Group1_Expense_Tracker.Controllers
 
 		}
 
+		public IActionResult Login() { 
+		
+		return View(); }
+	}
+
 	}
 }
