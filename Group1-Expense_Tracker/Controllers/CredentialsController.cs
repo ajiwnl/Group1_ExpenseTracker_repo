@@ -62,7 +62,13 @@ namespace Group1_Expense_Tracker.Controllers
 
 		public IActionResult Login() { 
 		
-		return View(); }
-	}
+			return View(); 
 
+		}
+
+		public IActionResult ForgotPassword()
+		{
+			return View();
+		}
+	}
 }
