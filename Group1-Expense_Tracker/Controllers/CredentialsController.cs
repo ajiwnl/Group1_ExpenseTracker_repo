@@ -65,5 +65,4 @@ namespace Group1_Expense_Tracker.Controllers
 		return View(); }
 	}
 
-	}
 }
