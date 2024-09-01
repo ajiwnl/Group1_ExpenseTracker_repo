@@ -7,87 +7,87 @@ using System.Text;
 
 namespace Group1_Expense_Tracker.Controllers
 {
-	public class CredentialsController : Controller
-	{
+    public class CredentialsController : Controller
+    {
 
-		private readonly ILogger<CredentialsController> _logger;
-		FirestoreDb _firestoreDb;
-		FirebaseAuthProvider _firebaseauth;
+        private readonly ILogger<CredentialsController> _logger;
+        FirestoreDb _firestoreDb;
+        FirebaseAuthProvider _firebaseauth;
 
-		public CredentialsController(ILogger<CredentialsController> logger)
-		{
-			_logger = logger;
-			_firebaseauth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyAhHT-TnETQg_ow8H_50R5p2c69_ZLVLMU"));
+        public CredentialsController(ILogger<CredentialsController> logger)
+        {
+            _logger = logger;
+            _firebaseauth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyAhHT-TnETQg_ow8H_50R5p2c69_ZLVLMU"));
 
-			// Initialize Firestore with your service account key
-			string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "group1-expensetracker-firebase-adminsdk-yqaqz-f9814ee58b.json");
-			Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
-			_firestoreDb = FirestoreDb.Create("group1-expensetracker");
-		}
+            // Initialize Firestore with your service account key
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "group1-expensetracker-firebase-adminsdk-yqaqz-f9814ee58b.json");
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
+            _firestoreDb = FirestoreDb.Create("group1-expensetracker");
+        }
 
-		public IActionResult Index()
-		{
-			return View();
-		}
+        public IActionResult Index()
+        {
+            return View();
+        }
 
-		public async Task<IActionResult> Register(Models.Credentials cred)
-		{
-			try
-			{
-				// Create the user with email and password
-				var authResult = await _firebaseauth.CreateUserWithEmailAndPasswordAsync(cred.EmailAdd, cred.Password);
+        public async Task<IActionResult> Register(Credentials cred)
+        {
+            try
+            {
+                // Create the user with email and password
+                var authResult = await _firebaseauth.CreateUserWithEmailAndPasswordAsync(cred.EmailAdd, cred.Password);
 
-				// Sign in the user (necessary to get the user's ID token)
-				var signInResult = await _firebaseauth.SignInWithEmailAndPasswordAsync(cred.EmailAdd, cred.Password);
-				var userId = signInResult.User.LocalId;
+                // Sign in the user (necessary to get the user's ID token)
+                var signInResult = await _firebaseauth.SignInWithEmailAndPasswordAsync(cred.EmailAdd, cred.Password);
+                var userId = signInResult.User.LocalId;
 
-				// Send email verification using Firebase REST API
-				var client = new HttpClient();
-				var requestContent = new StringContent(
-					JsonConvert.SerializeObject(new
-					{
-						requestType = "VERIFY_EMAIL",
-						idToken = signInResult.FirebaseToken
-					}),
-					Encoding.UTF8, "application/json");
+                // Send email verification using Firebase REST API
+                var client = new HttpClient();
+                var requestContent = new StringContent(
+                    JsonConvert.SerializeObject(new
+                    {
+                        requestType = "VERIFY_EMAIL",
+                        idToken = signInResult.FirebaseToken
+                    }),
+                    Encoding.UTF8, "application/json");
 
-				var response = await client.PostAsync($"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAhHT-TnETQg_ow8H_50R5p2c69_ZLVLMU", requestContent);
+                var response = await client.PostAsync($"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAhHT-TnETQg_ow8H_50R5p2c69_ZLVLMU", requestContent);
 
-				// Ensure the request was successful
-				response.EnsureSuccessStatusCode();
+                // Ensure the request was successful
+                response.EnsureSuccessStatusCode();
 
-				// Save the username and email in Firestore
-				DocumentReference docRef = _firestoreDb.Collection("Users").Document(userId);
-				Dictionary<string, object> userData = new Dictionary<string, object>
-		{
-			{ "Username", cred.Username },
-			{ "Email", cred.EmailAdd },
-			{ "IsEmailVerified", false }
-		};
-				await docRef.SetAsync(userData);
+                // Save the username and email in Firestore
+                DocumentReference docRef = _firestoreDb.Collection("Users").Document(userId);
+                Dictionary<string, object> userData = new Dictionary<string, object>
+        {
+            { "Username", cred.Username },
+            { "Email", cred.EmailAdd },
+            { "IsEmailVerified", false }
+        };
+                await docRef.SetAsync(userData);
 
-				// Provide feedback to the user to check their email for verification
-				TempData["RegistrationMsg"] = "Registration successful! Please verify your email address to continue.";
+                // Provide feedback to the user to check their email for verification
+                TempData["RegistrationMsg"] = "Registration successful! Please verify your email address to continue.";
 
-				return RedirectToAction("Login");
-			}
-			catch (FirebaseAuthException ex)
-			{
-				try
-				{
-					var firebasex = JsonConvert.DeserializeObject<ErrorModel>(ex.RequestData);
-					ModelState.AddModelError(string.Empty, firebasex.message);
-				}
-				catch
-				{
-					ModelState.AddModelError(string.Empty, ex.Message);
-				}
-				return View(cred);
-			}
-		}
+                return RedirectToAction("Login");
+            }
+            catch (FirebaseAuthException ex)
+            {
+                try
+                {
+                    var firebasex = JsonConvert.DeserializeObject<ErrorModel>(ex.RequestData);
+                    ModelState.AddModelError(string.Empty, firebasex.message);
+                }
+                catch
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+                return View(cred);
+            }
+        }
 
 
-        public async Task<IActionResult> Login(Models.Credentials cred)
+        public async Task<IActionResult> Login(Credentials cred)
         {
             try
             {
@@ -129,17 +129,28 @@ namespace Group1_Expense_Tracker.Controllers
 
         public async Task<IActionResult> VerifyEmail(string userId)
         {
-            // Update the Firestore document to set IsEmailVerified to true
-            var docRef = _firestoreDb.Collection("Users").Document(userId);
-            await docRef.UpdateAsync(new Dictionary<string, object>
-            {
-        { "IsEmailVerified", true }
-             });
+            // Get the user from Firebase Authentication
+            var userRecord = await _firebaseauth.GetUserAsync(userId);
 
-            // Redirect to the login page or provide a success message
-            TempData["VerificationSuccess"] = "Email verified successfully! You can now log in.";
+            if (userRecord.IsEmailVerified)
+            {
+                // Update the Firestore document to set IsEmailVerified to true
+                var docRef = _firestoreDb.Collection("Users").Document(userId);
+                await docRef.UpdateAsync(new Dictionary<string, object>
+        {
+            { "IsEmailVerified", true }
+        });
+
+                TempData["VerificationSuccess"] = "Email verified successfully! You can now log in.";
+            }
+            else
+            {
+                TempData["VerificationError"] = "Email verification failed or has not been completed. Please try again.";
+            }
+
             return RedirectToAction("Login");
         }
+
 
 
 
