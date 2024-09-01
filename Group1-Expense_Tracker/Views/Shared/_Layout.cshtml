@@ -8,7 +8,11 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Group1_Expense_Tracker.styles.css" asp-append-version="true" />
 </head>
-<body>
+@{
+    var darkModeCookie = Context.Request.Cookies["darkMode"];
+    var isDarkMode = darkModeCookie == "true";
+}
+<body class="@(isDarkMode ? "dark" : "")">
     @RenderBody()
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

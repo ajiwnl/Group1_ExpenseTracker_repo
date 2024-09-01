@@ -1,6 +1,10 @@
-﻿<div class="absolute h-screen w-1/6">
+﻿@{
+    var isDarkMode = Context.Request.Cookies["darkMode"] == "true";
+}
+
+<div class="absolute h-screen w-1/6">
     <div class="flex h-32 w-full items-center justify-center">
-        <img src="/img/LogoEx.png" class="h-24 w-24">
+        <img src="@(isDarkMode ? "/img/LogoBlack.png" : "/img/LogoBg.png")" class="h-24 w-24">
     </div>
     <div class="flex h-auto w-full flex-col gap-6">
         <a asp-area="" asp-controller="Analytics" asp-action="Summary" class="border-s-4 flex cursor-pointer flex-row items-center justify-center gap-3 hover:border-s-violet-500 @(ViewData["ActivePage"] as string == "Analytics" ? "border-s-violet-500" : "")">

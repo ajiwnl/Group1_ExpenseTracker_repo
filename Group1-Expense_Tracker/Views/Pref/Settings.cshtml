@@ -1,14 +1,75 @@
 ﻿@{
     ViewData["Title"] = "Settings";
+    var isDarkMode = Context.Request.Cookies["darkMode"] == "true";
+
 }
 
 @await Html.PartialAsync("Sidebar")
 
-<div class="flex h-screen w-screen flex-row">
+<div class="flex h-screen w-screen flex-row dark:bg-black">
     <div class="h-full w-1/6">
     </div>
     <div class="h-full w-5/6 p-8">
-        <div class="h-full w-full rounded-lg bg-gray-100"></div>
+        <div class="flex h-full w-full flex-row rounded-lg bg-gray-100 from-violet-950 to-slate-950 dark:bg-gradient-to-b">
+            <div class="flex h-full w-1/2 flex-col p-8">
+                <label class="text-2xl font-bold text-violet-500 dark:text-white">Settings and Preference</label>
+                <div class="mt-6 flex flex-col gap-5">
+                    <label class="text-xl font-bold text-black dark:text-white">User Information</label>
+                    <input type="text" class="rounded-lg border-zinc-400 px-4 py-2 placeholder:text-white dark:bg-transparent dark:border-2" placeholder="Username" />
+                    <input type="email" class="rounded-lg border-zinc-400 px-4 py-2 placeholder:text-white dark:bg-transparent dark:border-2" placeholder="Email" />
+                </div>
+                <form class="mt-6 flex flex-col gap-5">
+                    <label class="text-xl font-bold text-black">Password Management</label>
+                    <input type="text" class="rounded-lg px-4 py-2" placeholder="Old Password" />
+                    <input type="email" class="rounded-lg px-4 py-2" placeholder="New Password" />
+                    <input type="email" class="rounded-lg px-4 py-2" placeholder="Confirm Password"/>
+                    <div class="mt-2 flex w-full items-center justify-center">
+                        <button type="submit" class="w-32 rounded-full bg-violet-500 py-2 font-bold text-white drop-shadow-lg">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="flex h-full w-1/2 flex-col p-8">
+                <div class="flex h-52 w-full flex-col items-center justify-center gap-3">
+                    <label class="text-xl font-bold text-black">Profile Picture</label>
+                    <img src="/img/SampleProfile.jpg" class="h-32 w-32 rounded-full bg-transparent drop-shadow-lg" />
+                </div>
+                <div class="flex flex-col gap-5">
+                    <label class="text-xl font-bold text-black">Preference</label>
+                    <div class="flex flex-col">
+                        <label class="mb-4 text-lg font-bold text-black">Dark Mode</label>
+                        <label class="inline-flex cursor-pointer items-center drop-shadow-sm">
+                            <input id="darkModeToggle" type="checkbox" class="peer sr-only drop-shadow-sm" onchange="setDarkModePreference(this.checked)">
+                            <div class="relative drop-shadow-sm w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-500 dark:peer-focus:ring-green-500 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-violet-500 after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-violet-500 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+<script>
+    function setDarkModePreference(isDarkMode) {
+        document.cookie = `darkMode=${isDarkMode}; path=/; expires=${new Date(new Date().getTime() + 365 * 24 * 60 * 60 * 1000).toUTCString()}`;
+        document.body.classList.toggle('dark', isDarkMode);
+    }
+
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([.$?*|{}()[]\\\/+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    window.onload = function () {
+        const darkModeCookie = getCookie('darkMode');
+        const isDarkMode = darkModeCookie === 'true';
+
+        if (isDarkMode) {
+            document.body.classList.add('dark');
+            document.getElementById('darkModeToggle').checked = true;
+        }
+    };
+</script>
