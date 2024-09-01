@@ -1,4 +1,4 @@
-﻿using Firebase.Auth;
+using Firebase.Auth;
 using Google.Cloud.Firestore;
 using Group1_Expense_Tracker.Models;
 using Microsoft.AspNetCore.Mvc;
