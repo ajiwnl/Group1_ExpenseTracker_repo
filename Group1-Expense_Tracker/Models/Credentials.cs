@@ -10,5 +10,8 @@ namespace Group1_Expense_Tracker.Models
 
 		[Required]
 		public string Password { get; set;}
+
+		[Required]
+		public string Username { get; set; }
 	}
 }
