@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Firebase.Auth" Version="1.0.0" />
+    <PackageReference Include="Google.Cloud.Firestore" Version="3.8.0" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -17,7 +18,7 @@
 	</ItemGroup>
 
 	<Target Name="Tailwind" BeforeTargets="Build">
-		<Exec Command="npm run css:build"/>
+		<Exec Command="npm run css:build" />
 	</Target>
 	
 </Project>
