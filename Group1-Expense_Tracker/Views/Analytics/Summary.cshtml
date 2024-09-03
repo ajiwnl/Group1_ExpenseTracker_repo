@@ -3,7 +3,9 @@
     var isDarkMode = Context.Request.Cookies["darkMode"] == "true";
 
 }
+
 @await Html.PartialAsync("Sidebar")
+@await Html.PartialAsync("ProfileRibbon")
 
 <div class="flex h-screen w-screen flex-row dark:bg-black">
     <div class="h-full w-1/6">
