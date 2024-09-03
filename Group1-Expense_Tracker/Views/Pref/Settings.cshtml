@@ -15,14 +15,14 @@
                 <label class="text-2xl font-bold text-violet-500 dark:text-white">Settings and Preference</label>
                 <div class="mt-6 flex flex-col gap-5">
                     <label class="text-xl font-bold text-black dark:text-white">User Information</label>
-                    <input type="text" class="rounded-lg border-zinc-400 px-4 py-2 placeholder:text-white dark:bg-transparent dark:border-2" placeholder="Username" />
-                    <input type="email" class="rounded-lg border-zinc-400 px-4 py-2 placeholder:text-white dark:bg-transparent dark:border-2" placeholder="Email" />
+                    <input type="text" class="rounded-lg border-zinc-400 px-4 py-2 dark:bg-transparent dark:border-2 dark:placeholder:text-white" placeholder="Username" />
+                    <input type="email" class="rounded-lg border-zinc-400 px-4 py-2 dark:bg-transparent dark:border-2 dark:placeholder:text-white" placeholder="Email" />
                 </div>
                 <form class="mt-6 flex flex-col gap-5">
-                    <label class="text-xl font-bold text-black">Password Management</label>
-                    <input type="text" class="rounded-lg px-4 py-2" placeholder="Old Password" />
-                    <input type="email" class="rounded-lg px-4 py-2" placeholder="New Password" />
-                    <input type="email" class="rounded-lg px-4 py-2" placeholder="Confirm Password"/>
+                    <label class="text-xl font-bold text-black dark:text-white">Password Management</label>
+                    <input type="text" class="place rounded-lg border-zinc-400 px-4 py-2 dark:bg-transparent dark:border-2 dark:text-white dark:placeholder:text-white" placeholder="Old Password" />
+                    <input type="email" class="rounded-lg border-zinc-400 px-4 py-2 dark:text-white dark:bg-transparent dark:border-2 dark:placeholder:text-white" placeholder="New Password" />
+                    <input type="email" class="rounded-lg border-zinc-400 px-4 py-2 dark:text-white dark:bg-transparent dark:border-2 dark:placeholder:text-white" placeholder="Confirm Password" />
                     <div class="mt-2 flex w-full items-center justify-center">
                         <button type="submit" class="w-32 rounded-full bg-violet-500 py-2 font-bold text-white drop-shadow-lg">
                             Submit
@@ -32,17 +32,32 @@
             </div>
             <div class="flex h-full w-1/2 flex-col p-8">
                 <div class="flex h-52 w-full flex-col items-center justify-center gap-3">
-                    <label class="text-xl font-bold text-black">Profile Picture</label>
+                    <label class="text-xl font-bold text-black dark:text-white">Profile Picture</label>
                     <img src="/img/SampleProfile.jpg" class="h-32 w-32 rounded-full bg-transparent drop-shadow-lg" />
                 </div>
                 <div class="flex flex-col gap-5">
-                    <label class="text-xl font-bold text-black">Preference</label>
+                    <label class="text-xl font-bold text-black dark:text-white">Preference</label>
                     <div class="flex flex-col">
-                        <label class="mb-4 text-lg font-bold text-black">Dark Mode</label>
+                        <label class="mb-4 text-lg font-bold text-black dark:text-white">Dark Mode</label>
                         <label class="inline-flex cursor-pointer items-center drop-shadow-sm">
-                            <input id="darkModeToggle" type="checkbox" class="peer sr-only drop-shadow-sm" onchange="setDarkModePreference(this.checked)">
+                            <input id="darkModeToggle" type="checkbox" class="peer sr-only drop-shadow-sm"  onclick="setDarkModePreference(this.checked)">
                             <div class="relative drop-shadow-sm w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-500 dark:peer-focus:ring-green-500 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-violet-500 after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-violet-500 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
                         </label>
+                        <div class="mt-5 flex flex-row items-center gap-3">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_94_278)">
+                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#EE2E2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M12 7V11" stroke="#EE2E2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M12 16H12.01" stroke="#EE2E2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_94_278">
+                                        <rect width="24" height="24" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <label class="text-xs font-bold text-red-500">Incompatible on Google Chrome (Use Other Browsers)</label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -53,7 +68,10 @@
 <script>
     function setDarkModePreference(isDarkMode) {
         document.cookie = `darkMode=${isDarkMode}; path=/; expires=${new Date(new Date().getTime() + 365 * 24 * 60 * 60 * 1000).toUTCString()}`;
+
         document.body.classList.toggle('dark', isDarkMode);
+
+        window.location.reload();
     }
 
     function getCookie(name) {
@@ -61,6 +79,7 @@
             "(?:^|; )" + name.replace(/([.$?*|{}()[]\\\/+^])/g, '\\$1') + "=([^;]*)"
         ));
         return matches ? decodeURIComponent(matches[1]) : undefined;
+        console.log("triggered")
     }
 
     window.onload = function () {
@@ -72,4 +91,5 @@
             document.getElementById('darkModeToggle').checked = true;
         }
     };
+
 </script>
