@@ -11,13 +11,32 @@
 
 
 <div class="flex h-auto w-screen flex-row dark:bg-black">
-    <div class="h-full w-1/6">
+    <div class="hidden h-full w-1/6 md:flex">
     </div>
-    <div class="h-auto w-5/6">
-        <div class="h-screen w-full rounded-lg bg-gray-100 from-violet-950 to-slate-950 dark:bg-gradient-to-b">
-            <div class="flex h-full flex-col p-8">
-                <div class="credential-gradient flex h-full w-full flex-row rounded-lg p-8 shadow-sm shadow-black dark:shadow-lg">
-                    <div class="flex w-1/2 flex-row flex-wrap items-center gap-5">
+    <div class="h-auto w-full md:w-5/6">
+        <div class="h-auto w-full rounded-lg bg-gray-100 from-violet-950 to-slate-950 dark:bg-gradient-to-b">
+            <div class="flex h-full flex-col md:p-8">
+                <div class="credential-gradient flex h-full w-full flex-col rounded-lg p-8 shadow-sm shadow-black dark:shadow-lg md:flex-row">
+                    <div class="flex h-1/2 w-full flex-col md:w-1/2 md:h-full">
+                        <div class="flex h-8 w-full justify-end">
+                            <button type="button" class="rounded-full bg-white px-6 py-1 shadow-sm shadow-black">Total</button>
+                        </div>
+                        <div class="mt-2 flex h-auto min-h-44 flex-col gap-1">
+                            <label class="text-lg font-bold text-white">Expense Summary</label>
+                            <div class="flex h-10 flex-row items-center gap-2">
+                                <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 0L17.6603 15H0.339746L9 0Z" fill="#00FD87" />
+                                </svg>
+                                <label class="text-lg font-bold text-green-400">10.45%</label>
+                            </div>
+                            <label class="text-nowrap text-center text-6xl font-bold tracking-wider text-white drop-shadow-md">₱ 401,542.44</label>
+                            <div class="mt-2 flex flex-row items-center justify-center gap-3 text-center md:mt-5">
+                                <label class="text-lg font-bold text-white">Total Expense</label>
+                                <button type="button"><img class="mt-1 h-4 w-4" src="/img/EyeIcon.png" /></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 flex w-full flex-row flex-wrap items-center justify-center gap-5 md:mt-0 md:w-1/2">
                         <div class="relative flex h-24 w-48 flex-col gap-1 rounded-md bg-slate-950 p-3 shadow-md shadow-black">
                             <label class="font-bold tracking-wide text-white">Food Expenses</label>
                             <label class="font-bold text-green-500">₱12,345.77</label>
@@ -49,40 +68,21 @@
                             <div class="absolute bottom-4 right-4 h-4 w-4 rounded-full bg-rose-500"></div>
                         </div>
                     </div>
-                    <div class="flex w-1/2 flex-col">
-                        <div class="flex h-8 w-full justify-end">
-                            <button type="button" class="rounded-full bg-white px-6 py-1 shadow-sm shadow-black">Total</button>
-                        </div>
-                        <div class="mt-2 flex h-auto min-h-44 flex-col gap-1">
-                            <label class="text-lg font-bold text-white">Expense Summary</label>
-                            <div class="flex h-10 flex-row items-center gap-2">
-                                <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M9 0L17.6603 15H0.339746L9 0Z" fill="#00FD87" />
-                                </svg>
-                                <label class="text-lg font-bold text-green-400">10.45%</label>
-                            </div>
-                            <label class="text-6xl font-bold tracking-wider text-white drop-shadow-md">₱ 401,542.44</label>
-                            <div class="mt-5 flex flex-row items-center gap-3">
-                                <label class="text-lg font-bold text-white">Total Expense</label>
-                                <button type="button"><img class="mt-1 h-4 w-4" src="/img/EyeIcon.png" /></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-12 flex flex-col gap-5">
-                    <label class="text-2xl font-bold text-violet-500 dark:text-white">Report Generation</label>
-                    <div class="flex flex-row gap-5">
-                        <button type="button" class="rounded-full bg-white px-6 py-1 shadow-black drop-shadow-md">This Week</button>
-                        <button type="button" class="rounded-full bg-white px-6 py-1 shadow-black drop-shadow-md">Food Expense</button>
-                    </div>
                 </div>
             </div>
         </div>
-        <div class="h-screen bg-gray-100 px-8 dark:bg-slate-950">
-            <div class="h-3/6 overflow-x-auto shadow-black drop-shadow-md">
-                <table class="min-w-screen w-full table-fixed bg-white dark:bg-transparent">
+        <div class="h-auto bg-gray-100 px-8 dark:bg-slate-950">
+            <div class="mt-5 flex flex-col gap-5 md:mt-0">
+                <label class="text-2xl font-bold text-violet-500 dark:text-white">Report Generation</label>
+                <div class="flex flex-row gap-5">
+                    <button type="button" class="rounded-full bg-white px-6 py-1 shadow-black drop-shadow-md">This Week</button>
+                    <button type="button" class="rounded-full bg-white px-6 py-1 shadow-black drop-shadow-md">Food Expense</button>
+                </div>
+            </div>
+            <div class="mt-5 h-3/6 overflow-x-auto shadow-black drop-shadow-md">
+                <table class="w-full min-w-full table-fixed bg-white dark:bg-transparent">
                     <thead>
-                        <tr>
+                        <tr class="text-xs sm:text-base">
                             <th class="w-1/5 rounded-s-md bg-violet-500 py-2 font-bold text-white">
                                 Expense Name
                             </th>
@@ -103,10 +103,10 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
+                    <tbody> 
+                        <tr class="text-xs sm:text-base">
                             <td class="py-2 text-center dark:text-white">Sample Expense</td>
-                            <td class="py-2 text-center dark:text-white">₱100</td>
+                            <td class="py-2 text-center dark:text-white">$100</td>
                             <td class="py-2 text-center dark:text-white">01/09/2024</td>
                             <td class="py-2 text-center dark:text-white">Travel Expense</td>
                             <td class="py-2 text-center dark:text-white">Business Trip</td>
@@ -128,22 +128,22 @@
                     </tbody>
                 </table>
             </div>
-            <div class="flex justify-end">
+            <div class="mt-5 flex justify-end">
                 <div class="flex h-16 w-44 flex-col justify-center rounded-2xl bg-violet-500 px-6 shadow-black drop-shadow-lg">
                     <label class="text-sm font-bold tracking-wide text-white">Filtered Sum</label>
                     <label class="font-bold text-white">₱ 100,000.00</label>
                 </div>
             </div>
-            <div class="mt-12 flex flex-col gap-5">
+        </div>
+        <div class="h-auto bg-gray-100 p-8 dark:bg-slate-950">
+            <div class="flex flex-col gap-5">
                 <label class="text-2xl font-bold text-violet-500 dark:text-white">Expense Trends</label>
                 <div class="flex flex-row gap-5">
                     <button type="button" class="rounded-full bg-white px-6 py-1 shadow-black drop-shadow-md">Food Expense</button>
                     <button type="button" class="rounded-full bg-white px-6 py-1 shadow-black drop-shadow-md">Jan 1 - Jan 7</button>
                 </div>
             </div>
-        </div>
-        <div class="h-screen bg-gray-100 px-8 dark:bg-slate-950">
-            <canvas id="myLineChart" width="400" height="200"></canvas>
+            <canvas class="mt-5" id="myLineChart" width="400" height="200"></canvas>
         </div>
     </div>
 </div>

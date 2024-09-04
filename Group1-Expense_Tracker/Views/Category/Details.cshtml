@@ -8,16 +8,16 @@
 
 
 <div class="flex h-screen w-screen flex-row dark:bg-black">
-    <div class="h-full w-1/6">
+    <div class="hidden h-full w-1/6 md:flex">
     </div>
-    <div class="h-full w-5/6">
-        <div class="h-full w-full rounded-lg bg-gray-100 bg-gray-100 from-violet-950 to-slate-950 p-8 dark:bg-gradient-to-b">
+    <div class="h-full w-full md:w-5/6">
+        <div class="h-full w-full rounded-lg bg-gray-100 bg-gray-100 from-violet-950 to-slate-950 p-4 dark:bg-gradient-to-b md:p-8">
             <div class="flex h-full w-full flex-col p-8">
                 <label class="text-2xl font-bold text-violet-500 dark:text-white">Category Management</label>
                 <div class="mt-5 h-3/6 overflow-x-auto shadow-black drop-shadow-md">
-                    <table class="min-w-screen w-full table-fixed bg-white dark:bg-transparent">
+                    <table class="w-full min-w-full table-fixed bg-white dark:bg-transparent">
                         <thead>
-                            <tr>
+                            <tr class="text-xs sm:text-base">
                                 <th class="w-1/5 rounded-s-md bg-violet-500 py-2 font-bold text-white">
                                     Expense Name
                                 </th>
@@ -39,7 +39,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr class="text-xs sm:text-base">
                                 <td class="py-2 text-center dark:text-white">Sample Expense</td>
                                 <td class="py-2 text-center dark:text-white">$100</td>
                                 <td class="py-2 text-center dark:text-white">01/09/2024</td>
