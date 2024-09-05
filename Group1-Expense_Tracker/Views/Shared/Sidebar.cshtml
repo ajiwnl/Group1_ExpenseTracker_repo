@@ -3,37 +3,37 @@
     var isDarkMode = darkModeCookie == "true";
 }
 
-<div class="z-10 h-16 w-full dark:bg-black md:fixed md:w-1/6 md:h-screen">
+<div class="z-10 fixed bottom-0 left-0 h-16 w-full dark:bg-black md:fixed md:w-1/6 md:h-screen">
     <div class="hidden h-32 w-full items-center justify-center md:flex">
         <img src="@(isDarkMode ? "/img/LogoBlack.png" : "/img/LogoBg.png")" class="h-24 w-24">
     </div>
-    <div class="hidden h-auto w-full flex-col gap-6 md:flex">
-        <a asp-area="" asp-controller="Analytics" asp-action="Summary" class="border-s-4 flex cursor-pointer flex-row items-center justify-center gap-3 hover:border-s-violet-500 @(ViewData["ActivePage"] as string == "Analytics" ? "border-s-violet-500" : isDarkMode ? "border-black" : "border-white")">
+    <div class="flex h-full w-full flex-row flex-nowrap items-center justify-center gap-6 md:justify-normal md:items-start md:flex-col">
+        <a asp-area="" asp-controller="Analytics" asp-action="Summary" class="flex w-16 cursor-pointer flex-row items-center justify-center gap-3 md:w-full md:border-s-4 md:hover:border-s-violet-500 @(ViewData["ActivePage"] as string == "Analytics" ? "border-s-violet-500" : isDarkMode ? "border-black" : "border-white")">
             <svg width="25" height="25" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M3.37868 3.37868C2.5 4.25736 2.5 5.67157 2.5 8.5V21.5C2.5 24.3284 2.5 25.7426 3.37868 26.6213C4.25736 27.5 5.67157 27.5 8.5 27.5H21.5C24.3284 27.5 25.7426 27.5 26.6213 26.6213C27.5 25.7426 27.5 24.3284 27.5 21.5V8.5C27.5 5.67157 27.5 4.25736 26.6213 3.37868C25.7426 2.5 24.3284 2.5 21.5 2.5H8.5C5.67157 2.5 4.25736 2.5 3.37868 3.37868ZM22.0821 11.8047C22.3884 11.3452 22.2642 10.7243 21.8047 10.4179C21.3452 10.1116 20.7243 10.2358 20.4179 10.6953L16.3738 16.7615L15.4151 14.844C14.7283 13.4705 12.8139 13.3513 11.9621 14.6291L7.91795 20.6953C7.6116 21.1548 7.73577 21.7757 8.1953 22.0821C8.65483 22.3884 9.2757 22.2642 9.58205 21.8047L13.6262 15.7385L14.5849 17.656C15.2717 19.0295 17.1861 19.1487 18.0379 17.8709L22.0821 11.8047Z" fill="@(ViewData["ActivePage"] as string == "Analytics" ? "#8C52FF" : "#DADADA")" />
             </svg>
-            <label class="cursor-pointer font-bold @(ViewData["ActivePage"] as string == "Analytics" ? "text-violet-500" : "text-gray-500")">Analytics</label>
+            <label class="hidden cursor-pointer font-bold md:block @(ViewData["ActivePage"] as string == "Analytics" ? "text-violet-500" : "text-gray-500")">Analytics</label>
         </a>
-        <a asp-area="" asp-controller="Category" asp-action="Details" class="border-s-4 flex cursor-pointer flex-row items-center justify-center gap-3 hover:border-s-violet-500 @(ViewData["ActivePage"] as string == "Category" ? "border-s-violet-500" : isDarkMode ? "border-black" : "border-white")">
+        <a asp-area="" asp-controller="Category" asp-action="Details" class="flex w-16 cursor-pointer flex-row items-center justify-center gap-3 md:w-full md:border-s-4 md:hover:border-s-violet-500 @(ViewData["ActivePage"] as string == "Category" ? "border-s-violet-500" : isDarkMode ? "border-black" : "border-white")">
             <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M16.25 21.25H11.25V24.5885C11.25 24.7554 11.0577 24.8489 10.9264 24.7458L2.5 18.125L10.9264 11.5042C11.0577 11.4011 11.25 11.4946 11.25 11.6615V15H18.75" stroke="@(ViewData["ActivePage"] as string == "Category" ? "#8C52FF" : "#DADADA")" stroke-width="2" />
                 <path d="M13.75 8.75H18.75V5.41149C18.75 5.24461 18.9423 5.15112 19.0736 5.25423L27.5 11.875L19.0736 18.4958C18.9423 18.5989 18.75 18.5054 18.75 18.3385V15H11.25" stroke="@(ViewData["ActivePage"] as string == "Category" ? "#8C52FF" : "#DADADA")" stroke-width="2" />
             </svg>
-            <label class="cursor-pointer font-bold @(ViewData["ActivePage"] as string == "Category" ? "text-violet-500" : "text-gray-500")">Category</label>
+            <label class="hidden cursor-pointer font-bold md:block @(ViewData["ActivePage"] as string == "Category" ? "text-violet-500" : "text-gray-500")">Category</label>
         </a>
-        <a asp-area="" asp-controller="Expense" asp-action="Details" class="border-s-4 flex cursor-pointer flex-row items-center justify-center gap-3 hover:border-s-violet-500 @(ViewData["ActivePage"] as string == "Expense" ? "border-s-violet-500" : isDarkMode ? "border-black" : "border-white")">
+        <a asp-area="" asp-controller="Expense" asp-action="Details" class="flex w-16 cursor-pointer flex-row items-center justify-center gap-3 md:w-full md:border-s-4 md:hover:border-s-violet-500 @(ViewData["ActivePage"] as string == "Expense" ? "border-s-violet-500" : isDarkMode ? "border-black" : "border-white")">
             <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3.75 5H26.25" fill="@(ViewData["ActivePage"] as string == "Expense" ? "#8C52FF" : "#DADADA")" stroke-width="2" stroke-linecap="round" />
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M23.75 5H6.25V20.55C6.25 21.6701 6.25 22.2302 6.46799 22.658C6.65973 23.0343 6.96569 23.3403 7.34202 23.532C7.76984 23.75 8.3299 23.75 9.45 23.75H20.55C21.6701 23.75 22.2302 23.75 22.658 23.532C23.0343 23.3403 23.3403 23.0343 23.532 22.658C23.75 22.2302 23.75 21.6701 23.75 20.55V5ZM14 18.75V13.6642L11.9571 15.7071C11.5666 16.0976 10.9334 16.0976 10.5429 15.7071C10.1524 15.3166 10.1524 14.6834 10.5429 14.2929L14.1603 10.6755C14.1836 10.6522 14.2076 10.6301 14.2323 10.6091C14.4158 10.3896 14.6916 10.25 15 10.25C15.3084 10.25 15.5842 10.3896 15.7677 10.6091C15.7924 10.6301 15.8164 10.6522 15.8397 10.6755L19.4571 14.2929C19.8476 14.6834 19.8476 15.3166 19.4571 15.7071C19.0666 16.0976 18.4334 16.0976 18.0429 15.7071L16 13.6642V18.75C16 19.3023 15.5523 19.75 15 19.75C14.4477 19.75 14 19.3023 14 18.75Z" fill="@(ViewData["ActivePage"] as string == "Expense" ? "#8C52FF" : "#DADADA")" />
             </svg>
-            <label class="cursor-pointer font-bold @(ViewData["ActivePage"] as string == "Expense" ? "text-violet-500" : "text-gray-500")">Expense</label>
+            <label class="hidden cursor-pointer font-bold md:block @(ViewData["ActivePage"] as string == "Expense" ? "text-violet-500" : "text-gray-500")">Expense</label>
         </a>
-        <a asp-area="" asp-controller="Pref" asp-action="Settings" class="border-s-4 flex cursor-pointer flex-row items-center justify-center gap-3 hover:border-s-violet-500 @(ViewData["ActivePage"] as string == "Settings" ? "border-s-violet-500" : isDarkMode ? "border-black" : "border-white")">
+        <a asp-area="" asp-controller="Pref" asp-action="Settings" class="flex w-16 cursor-pointer flex-row items-center justify-center gap-3 md:w-full md:border-s-4 md:hover:border-s-violet-500 @(ViewData["ActivePage"] as string == "Settings" ? "border-s-violet-500" : isDarkMode ? "border-black" : "border-white")">
             <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M17.9341 7.82463C18.472 7.31356 19.1994 6.99995 20 6.99995C20.2361 6.99995 20.4657 7.02722 20.6861 7.07877C21.5467 7.69762 22.3023 8.45327 22.9212 9.31387C22.9727 9.53421 23 9.7639 23 9.99995C23 10.8006 22.6864 11.5279 22.1753 12.0659C21.3892 10.1454 19.8545 8.61074 17.9341 7.82463ZM13.5008 7.39485C13.8209 6.59712 14.2835 5.87198 14.8573 5.25098C9.53829 5.3273 5.25 9.66283 5.25 15C5.25 20.3847 9.61522 24.75 15 24.75C20.3371 24.75 24.6727 20.4617 24.749 15.1427C24.128 15.7164 23.4028 16.1791 22.6051 16.4991C21.9068 20.0619 18.7673 22.75 15 22.75C10.7198 22.75 7.25 19.2802 7.25 15C7.25 11.2326 9.93805 8.09315 13.5008 7.39485Z" fill="@(ViewData["ActivePage"] as string == "Settings" ? "#8C52FF" : "#DADADA")" />
                 <circle cx="20" cy="10" r="5" fill="@(ViewData["ActivePage"] as string == "Settings" ? "#8C52FF" : "#DADADA")" />
             </svg>
-            <label class="cursor-pointer font-bold @(ViewData["ActivePage"] as string == "Settings" ? "text-violet-500" : "text-gray-500")">Settings</label>
+            <label class="hidden cursor-pointer font-bold md:block @(ViewData["ActivePage"] as string == "Settings" ? "text-violet-500" : "text-gray-500")">Settings</label>
         </a>
     </div>
 </div>
