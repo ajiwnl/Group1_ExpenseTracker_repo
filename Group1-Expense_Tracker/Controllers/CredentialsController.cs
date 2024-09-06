@@ -37,37 +37,25 @@ namespace Group1_Expense_Tracker.Controllers
                 // Create the user with email and password
                 var authResult = await _firebaseauth.CreateUserWithEmailAndPasswordAsync(cred.EmailAdd, cred.Password);
 
-                // Sign in the user (necessary to get the user's ID token)
+                // Sign in the user
                 var signInResult = await _firebaseauth.SignInWithEmailAndPasswordAsync(cred.EmailAdd, cred.Password);
-                var userId = signInResult.User.LocalId;
+                var user = signInResult.User;
 
-                // Send email verification using Firebase REST API
-                var client = new HttpClient();
-                var requestContent = new StringContent(
-                    JsonConvert.SerializeObject(new
-                    {
-                        requestType = "VERIFY_EMAIL",
-                        idToken = signInResult.FirebaseToken
-                    }),
-                    Encoding.UTF8, "application/json");
-
-                var response = await client.PostAsync($"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAhHT-TnETQg_ow8H_50R5p2c69_ZLVLMU", requestContent);
-
-                // Ensure the request was successful
-                response.EnsureSuccessStatusCode();
+                // Send email verification
+                await _firebaseauth.SendEmailVerificationAsync(signInResult.FirebaseToken);
 
                 // Save the username and email in Firestore
+                var userId = user.LocalId;
                 DocumentReference docRef = _firestoreDb.Collection("Users").Document(userId);
                 Dictionary<string, object> userData = new Dictionary<string, object>
-        {
-            { "Username", cred.Username },
-            { "Email", cred.EmailAdd },
-            { "IsEmailVerified", false }
-        };
+                {
+                    { "Username", cred.Username },
+                    { "Email", cred.EmailAdd }
+                 };
                 await docRef.SetAsync(userData);
 
                 // Provide feedback to the user to check their email for verification
-                TempData["RegistrationMsg"] = "Registration successful! Please verify your email address to continue.";
+                TempData["RegistrationMsg"] = "Registration successful! Please verify your email for verification.";
 
                 return RedirectToAction("Login");
             }
@@ -86,78 +74,74 @@ namespace Group1_Expense_Tracker.Controllers
             }
         }
 
-
         public async Task<IActionResult> Login(Credentials cred)
         {
             try
             {
-                // Fetch user document from Firestore using the provided username
-                var userDoc = await _firestoreDb.Collection("Users")
-                    .WhereEqualTo("Username", cred.Username)
-                    .Limit(1)
-                    .GetSnapshotAsync();
+                // Step 1: Fetch the email based on the provided username
+                Query query = _firestoreDb.Collection("Users").WhereEqualTo("Username", cred.Username);
+                QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
 
-                if (userDoc.Documents.Count == 0)
+                if (querySnapshot.Documents.Count == 0)
                 {
-                    TempData["LoginErrorMsg"] = "Username or password is incorrect.";
+                    ModelState.AddModelError(string.Empty, "Username not found.");
                     return View(cred);
                 }
 
-                var userId = userDoc.Documents[0].Id; // Get user ID from the document
-                var userData = userDoc.Documents[0].ToDictionary();
+                // Step 2: Extract the email from the Firestore result
+                DocumentSnapshot documentSnapshot = querySnapshot.Documents.First();
+                string email = documentSnapshot.GetValue<string>("Email");
 
-                // Check if the email is verified
-                if (!(bool)userData["IsEmailVerified"])
+                // Step 3: Use the retrieved email to log in
+                var signInResult = await _firebaseauth.SignInWithEmailAndPasswordAsync(email, cred.Password);
+                var user = signInResult.User;
+
+                if (user == null)
                 {
-                    TempData["LoginErrorMsg"] = "Email is not verified. Please verify your email to login.";
+                    TempData["LoginErrorMsg"] = "Username or password is incorrect.";
                     return View("Login");
                 }
 
-                // Sign in the user with email and password
-                var signInResult = await _firebaseauth.SignInWithEmailAndPasswordAsync(userData["Email"].ToString(), cred.Password);
+                // Step 4: Check if the email is verified
+                if (!user.IsEmailVerified)
+                {
+                    TempData["LoginSuccess"] = $"Welcome, {cred.Username}. You have logged in successfully!";
+                    return RedirectToAction("Summary", "Analytics");
+                }
+                return View(cred);
 
-                // Proceed with successful login (e.g., set auth cookies, redirect, etc.)
-                TempData["LoginSuccess"] = $"Welcome, {cred.Username}. You've logged in successfully!";
-                return RedirectToAction("ForgotPassword");
             }
             catch (FirebaseAuthException ex)
             {
-                TempData["LoginErrorMsg"] = ex.Message;
-                return View("Login");
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(cred);
             }
         }
 
-        public async Task<IActionResult> VerifyEmail(string userId)
+
+
+        public async Task<IActionResult> ForgotPassword(Credentials cred)
         {
-            // Get the user from Firebase Authentication
-            var userRecord = await _firebaseauth.GetUserAsync(userId);
-
-            if (userRecord.IsEmailVerified)
+            try
             {
-                // Update the Firestore document to set IsEmailVerified to true
-                var docRef = _firestoreDb.Collection("Users").Document(userId);
-                await docRef.UpdateAsync(new Dictionary<string, object>
-        {
-            { "IsEmailVerified", true }
-        });
+                // Check if the email is provided
+                if (string.IsNullOrEmpty(cred.EmailAdd))
+                {
+                    return View(cred);
+                }
+                //Send the password reset email
+                await _firebaseauth.SendPasswordResetEmailAsync(cred.EmailAdd);
 
-                TempData["VerificationSuccess"] = "Email verified successfully! You can now log in.";
+                // Notify the user the email was sent
+                TempData["ForgotPasswordMsg"] = "A password reset link has been sent to your email.";
+                return RedirectToAction("Login");
             }
-            else
+            catch (FirebaseAuthException ex)
             {
-                TempData["VerificationError"] = "Email verification failed or has not been completed. Please try again.";
+                ModelState.AddModelError(string.Empty, "Error sending password reset email. Please check your email and try again.");
+                return View(cred);
             }
-
-            return RedirectToAction("Login");
         }
 
-
-
-
-
-        public IActionResult ForgotPassword()
-		{
-			return View();
-		}
-	}
+    }
 }
