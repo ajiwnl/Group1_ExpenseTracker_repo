@@ -1,4 +1,7 @@
-﻿@{
+﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@{
     ViewData["Title"] = "Summary";
     var isDarkMode = Context.Request.Cookies["darkMode"] == "true";
 
@@ -173,3 +176,15 @@
         }
     });
 </script>
+
+@if (TempData.ContainsKey("LoginSuccess"))
+{
+    <script>
+        var loginSuccess = '@TempData["LoginSuccess"]';
+        Swal.fire({
+            icon: 'success',
+            title: 'Login Successful',
+            text: loginSuccess,
+        });
+    </script>
+}
