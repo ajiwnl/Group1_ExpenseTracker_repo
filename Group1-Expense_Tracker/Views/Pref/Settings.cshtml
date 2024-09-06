@@ -33,7 +33,11 @@
             <div class="order-1 flex h-full w-full flex-col px-8 pb-20 pt-8 md:w-1/2 md:order-2">
                 <div class="flex h-52 w-full flex-col items-center justify-center gap-3">
                     <label class="text-xl font-bold text-black dark:text-white">Profile Picture</label>
-                    <img src="/img/SampleProfile.jpg" class="h-32 w-32 rounded-full bg-transparent drop-shadow-lg" />
+                    <input type="file" accept="image/*" class="hidden" id="imgFile" onchange="setImagePreview(event)" />
+                    <img id="profileImage" src="/img/SampleProfile.jpg" class="h-32 w-32 rounded-full bg-transparent drop-shadow-lg" />
+                    <label for="imgFile" class="mt-4 inline-block cursor-pointer rounded bg-violet-500 px-4 py-2 text-white">
+                        Upload Profile Picture
+                    </label>
                 </div>
                 <div class="flex flex-col gap-5">
                     <label class="text-xl font-bold text-black dark:text-white">Preference</label>
@@ -64,6 +68,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    const setImagePreview = (event) => {
+        const file = event.target.files[0];
+
+        // Check if a file is selected and is an image
+        if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+
+            // When file is loaded, set the image preview
+            reader.onloadend = () => {
+                document.getElementById("profileImage").src = reader.result;
+            };
+
+            // Read the image file as a data URL
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 
 <script>
     function setDarkModePreference(isDarkMode) {
