@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 
-//Test push
-
 namespace Group1_Expense_Tracker.Controllers
 {
     public class CredentialsController : Controller
@@ -23,7 +21,7 @@ namespace Group1_Expense_Tracker.Controllers
 
             // Initialize Firestore with your service account key
 
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "group1-expensetracker-firebase-adminsdk-yqaqz-edfc9561fc");
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "group1-expensetracker-firebase-adminsdk-yqaqz-707ec0f28f.json");
 
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
             _firestoreDb = FirestoreDb.Create("group1-expensetracker");
