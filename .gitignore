@@ -369,5 +369,5 @@ FodyWeavers.xsd
 
 node_modules
 **/node_modules
-/Group1-Expense_Tracker/wwwroot/group1-expensetracker-firebase-adminsdk-yqaqz-7c266ce4e7.json
+
 /Group1-Expense_Tracker/wwwroot/group1-expensetracker-firebase-adminsdk-yqaqz-7c266ce4e7.json
