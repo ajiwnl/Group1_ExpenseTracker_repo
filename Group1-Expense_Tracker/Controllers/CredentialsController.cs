@@ -35,6 +35,19 @@ namespace Group1_Expense_Tracker.Controllers
 
             try
             {
+
+                // Check if the username already exists in Firestore
+                var usernameQuery = await _firestoreDb.Collection("Users")
+                    .WhereEqualTo("Username", cred.Username)
+                    .GetSnapshotAsync();
+
+                if (usernameQuery.Documents.Count > 0)
+                {
+                    TempData["UserExist"] = "Username already exists.";
+                    return View(cred);
+                }
+
+
                 // Create the user with email and password
                 var authResult = await _firebaseauth.CreateUserWithEmailAndPasswordAsync(cred.EmailAdd, cred.Password);
 
@@ -62,15 +75,15 @@ namespace Group1_Expense_Tracker.Controllers
             }
             catch (FirebaseAuthException ex)
             {
-                try
+                if (ex.Message.Contains("EMAIL_EXISTS"))
                 {
-                    var firebasex = JsonConvert.DeserializeObject<ErrorModel>(ex.RequestData);
-                    ModelState.AddModelError(string.Empty, firebasex.message);
+                    TempData["EmailExist"] = "Email already exists.";
                 }
-                catch
+                else
                 {
-                    ModelState.AddModelError(string.Empty, ex.Message);
+                    TempData["ErrorMessage"] = "An error occurred: " + ex.Message;
                 }
+
                 return View(cred);
             }
         }
@@ -143,6 +156,5 @@ namespace Group1_Expense_Tracker.Controllers
                 return View(cred);
             }
         }
-
     }
 }
