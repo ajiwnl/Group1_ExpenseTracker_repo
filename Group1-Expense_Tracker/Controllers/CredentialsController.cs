@@ -32,6 +32,11 @@ namespace Group1_Expense_Tracker.Controllers
 
         public async Task<IActionResult> Register(Credentials cred)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(cred);
+            }
+
             try
             {
                 // Create the user with email and password
