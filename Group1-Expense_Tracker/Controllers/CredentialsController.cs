@@ -133,7 +133,6 @@ namespace Group1_Expense_Tracker.Controllers
         }
 
 
-
         public async Task<IActionResult> ForgotPassword(Credentials cred)
         {
             try
@@ -156,5 +155,13 @@ namespace Group1_Expense_Tracker.Controllers
                 return View(cred);
             }
         }
+
+        public async Task<IActionResult> Logout()
+        {
+          // await _firebaseauth.SignOutAsync(); (Error in this part need to be fixed)
+            TempData["LogoutMessage"] = "You have successfully logged out.";
+            return RedirectToAction("Login", "Credentials");
+        }
+
     }
 }
