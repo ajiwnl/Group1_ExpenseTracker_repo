@@ -5,6 +5,9 @@
 
 **/bin
 
+# Ignore the Firebase admin SDK file
+wwwroot/group1-expensetracker-firebase-adminsdk-yqaqz-edfc9561fc
+
 # User-specific files
 *.rsuser
 *.suo
