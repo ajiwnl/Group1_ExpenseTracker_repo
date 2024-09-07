@@ -14,17 +14,11 @@ namespace Group1_Expense_Tracker.Controllers
         FirestoreDb _firestoreDb;
         FirebaseAuthProvider _firebaseauth;
 
-        public CredentialsController(ILogger<CredentialsController> logger)
+        public CredentialsController(ILogger<CredentialsController> logger, FirebaseAuthProvider firebaseauth, FirestoreDb firestoreDb)
         {
             _logger = logger;
-            _firebaseauth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyAhHT-TnETQg_ow8H_50R5p2c69_ZLVLMU"));
-
-            // Initialize Firestore with your service account key
-
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "group1-expensetracker-firebase-adminsdk-yqaqz-707ec0f28f.json");
-
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
-            _firestoreDb = FirestoreDb.Create("group1-expensetracker");
+            _firebaseauth = firebaseauth;
+            _firestoreDb = firestoreDb;
         }
 
         public IActionResult Index()

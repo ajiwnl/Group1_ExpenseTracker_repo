@@ -1,4 +1,7 @@
+using Group1_Expense_Tracker;
+
 var builder = WebApplication.CreateBuilder(args);
+var startup = new Startup(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -11,7 +14,11 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+startup.ConfigureServices(builder.Services);
+
 var app = builder.Build();
+
+startup.Configure(app, app.Environment);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

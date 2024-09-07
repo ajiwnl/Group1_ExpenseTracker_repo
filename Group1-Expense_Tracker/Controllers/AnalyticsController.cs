@@ -9,5 +9,7 @@ namespace Group1_Expense_Tracker.Controllers
             ViewData["ActivePage"] = "Analytics";
             return View();
         }
+
+
     }
 }
