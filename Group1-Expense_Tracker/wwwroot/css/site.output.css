@@ -1523,6 +1523,10 @@ body {
     height: 75%;
   }
 
+  .md\:h-4\/5 {
+    height: 80%;
+  }
+
   .md\:h-full {
     height: 100%;
   }
