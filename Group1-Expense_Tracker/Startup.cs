@@ -18,7 +18,7 @@ namespace Group1_Expense_Tracker
             // Set the environment variable for Firestore credentials
             string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "group1-expensetracker-firebase-adminsdk-yqaqz-7c266ce4e7.json");
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
-
+               
             // Add FirebaseAuthProvider and FirestoreDb as services
             services.AddSingleton(new FirebaseAuthProvider(new FirebaseConfig("AIzaSyAhHT-TnETQg_ow8H_50R5p2c69_ZLVLMU")));
             services.AddSingleton(FirestoreDb.Create("group1-expensetracker"));
