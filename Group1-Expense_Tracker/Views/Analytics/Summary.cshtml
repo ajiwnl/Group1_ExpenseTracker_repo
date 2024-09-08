@@ -182,9 +182,11 @@
     <script>
         var loginSuccess = '@TempData["LoginSuccess"]';
         Swal.fire({
-            icon: 'success',
             title: 'Login Successful',
             text: loginSuccess,
+            imageUrl: '/img/login-emoji.svg',
+            imageWidth: 100,
+            imageHeight: 100,
         });
     </script>
 }
