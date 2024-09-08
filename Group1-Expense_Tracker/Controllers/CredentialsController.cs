@@ -35,6 +35,19 @@ namespace Group1_Expense_Tracker.Controllers
 
             try
             {
+
+                // Check if the username already exists in Firestore
+                var usernameQuery = await _firestoreDb.Collection("Users")
+                    .WhereEqualTo("Username", cred.Username)
+                    .GetSnapshotAsync();
+
+                if (usernameQuery.Documents.Count > 0)
+                {
+                    TempData["UserExist"] = "Username already exists.";
+                    return View(cred);
+                }
+
+
                 // Create the user with email and password
                 var authResult = await _firebaseauth.CreateUserWithEmailAndPasswordAsync(cred.EmailAdd, cred.Password);
 
@@ -62,15 +75,15 @@ namespace Group1_Expense_Tracker.Controllers
             }
             catch (FirebaseAuthException ex)
             {
-                try
+                if (ex.Message.Contains("EMAIL_EXISTS"))
                 {
-                    var firebasex = JsonConvert.DeserializeObject<ErrorModel>(ex.RequestData);
-                    ModelState.AddModelError(string.Empty, firebasex.message);
+                    TempData["EmailExist"] = "Email already exists.";
                 }
-                catch
+                else
                 {
-                    ModelState.AddModelError(string.Empty, ex.Message);
+                    TempData["ErrorMessage"] = "An error occurred: " + ex.Message;
                 }
+
                 return View(cred);
             }
         }
@@ -106,6 +119,7 @@ namespace Group1_Expense_Tracker.Controllers
                 // Step 4: Check if the email is verified
                 if (!user.IsEmailVerified)
                 {
+                    HttpContext.Session.SetString("FirebaseUserId", user.LocalId); //added this to determine which user is logged in for retrieval purposes
                     TempData["LoginSuccess"] = $"Welcome, {cred.Username}. You have logged in successfully!";
                     return RedirectToAction("Summary", "Analytics");
                 }
@@ -118,7 +132,6 @@ namespace Group1_Expense_Tracker.Controllers
                 return View(cred);
             }
         }
-
 
 
         public async Task<IActionResult> ForgotPassword(Credentials cred)
@@ -143,6 +156,19 @@ namespace Group1_Expense_Tracker.Controllers
                 return View(cred);
             }
         }
+
+        public IActionResult Logout()
+        {
+            // Clear the user's authentication cookie or session
+            HttpContext.Session.Clear(); // If using session
+
+            // Clear authentication cookie (if using cookies)
+            HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
+
+            TempData["LogoutMessage"] = "You have successfully logged out.";
+            return RedirectToAction("Login", "Credentials");
+        }
+
 
     }
 }

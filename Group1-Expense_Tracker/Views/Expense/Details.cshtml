@@ -1,35 +1,59 @@
 ﻿@{
     ViewData["Title"] = "Expense";
+    var categories = ViewData["Categories"] as List<string>;
 }
 
 @await Html.PartialAsync("Sidebar")
 @await Html.PartialAsync("ProfileRibbon")
 
-
 <div class="flex h-screen w-screen flex-row dark:bg-black">
-    <div class="hidden h-full w-1/6 md:flex">
-    </div>
+    <div class="hidden h-full w-1/6 md:flex"></div>
     <div class="h-full w-full md:w-5/6">
-        <div class="flex h-full w-full flex-row rounded-lg bg-gray-100 bg-gray-100 from-violet-950 to-slate-950 p-8 dark:bg-gradient-to-b">
+        <div class="flex h-full w-full flex-row rounded-lg bg-gray-100 from-violet-950 to-slate-950 p-8 dark:bg-gradient-to-b">
             <div class="w-full md:w-1/2">
                 <label class="text-2xl font-bold text-violet-500 dark:text-white">Expense Management</label>
-                <form class="mt-5 flex flex-col gap-3">
+                <form method="post" action="/Expense/AddExpense" class="mt-5 flex flex-col gap-3">
+                    <!-- Category Dropdown -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-lg font-bold text-black dark:text-white">Category</label>
+                        <select name="categoryName" class="rounded-lg border-zinc-600 px-4 py-2 dark:bg-violet-950 dark:border-2 dark:placeholder:text-white" required>
+                            <option value="">Select a Category</option>
+                            @foreach (var category in categories)
+                            {
+                                <option value="@category">@category</option>
+                            }
+                        </select>
+                        @if (ViewData["CategoryError"] != null)
+                        {
+                            <p class="text-red-500 mt-1">@ViewData["CategoryError"]</p>
+                        }
+                    </div>
+
+                    <!-- Title/Name of Expense -->
                     <div class="flex flex-col gap-2">
                         <label class="text-lg font-bold text-black dark:text-white">Title/Name of Expense</label>
-                        <input type="text" class="rounded-lg border-zinc-600 px-4 py-2 dark:bg-violet-950 dark:border-2 dark:placeholder:text-white" placeholder="Cake" />
+                        <input name="title" type="text" class="rounded-lg border-zinc-600 px-4 py-2 dark:bg-violet-950 dark:border-2 dark:placeholder:text-white" placeholder="Expense Title" required />
                     </div>
+
+                    <!-- Amount -->
                     <div class="flex flex-col gap-2">
                         <label class="text-lg font-bold text-black dark:text-white">Amount</label>
-                        <input type="number" class="rounded-lg border-zinc-600 px-4 py-2 dark:text-white dark:bg-violet-950 dark:border-2 dark:placeholder:text-white" min="0" placeholder="10000" />
+                        <input name="amount" type="number" step="0.01" class="rounded-lg border-zinc-600 px-4 py-2 dark:text-white dark:bg-violet-950 dark:border-2 dark:placeholder:text-white" min="0" placeholder="10000" required />
                     </div>
+
+                    <!-- Date -->
                     <div class="flex flex-col gap-2">
                         <label class="text-lg font-bold text-black dark:text-white">Date</label>
-                        <input type="date" class="rounded-lg border-zinc-600 px-4 py-2 dark:text-white dark:bg-violet-950 dark:border-2 dark:placeholder:text-white" placeholder="10000" />
+                        <input name="date" type="date" class="rounded-lg border-zinc-600 px-4 py-2 dark:text-white dark:bg-violet-950 dark:border-2 dark:placeholder:text-white" required />
                     </div>
+
+                    <!-- Description -->
                     <div class="flex flex-col gap-2">
                         <label class="text-lg font-bold text-black dark:text-white">Description</label>
-                        <textarea class="min-h-32 resize-none rounded-lg border-zinc-600 px-4 py-2 dark:text-white dark:bg-violet-950 dark:border-2 dark:placeholder:text-white" placeholder="Birthday Cake"></textarea>
+                        <textarea name="description" class="min-h-32 resize-none rounded-lg border-zinc-600 px-4 py-2 dark:text-white dark:bg-violet-950 dark:border-2 dark:placeholder:text-white" placeholder="Expense Description" required></textarea>
                     </div>
+
+                    <!-- Submit Button -->
                     <div class="mt-2 flex w-full items-center justify-center">
                         <button type="submit" class="w-32 rounded-full bg-violet-500 py-2 font-bold text-white drop-shadow-lg">
                             Submit
@@ -44,3 +68,5 @@
         </div>
     </div>
 </div>
+
+
