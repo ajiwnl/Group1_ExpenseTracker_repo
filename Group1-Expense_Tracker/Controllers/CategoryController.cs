@@ -87,6 +87,10 @@ namespace Group1_Expense_Tracker.Controllers
         public async Task<IActionResult> Details()
         {
             string userId = HttpContext.Session.GetString("FirebaseUserId");
+
+            ViewData["ActivePage"] = "Category";
+
+            string userId = HttpContext.Session.GetString("FirebaseUserId"); //retrieve the current logged-in user
             if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login", "Credentials");
