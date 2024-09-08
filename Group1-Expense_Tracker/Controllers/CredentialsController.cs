@@ -119,6 +119,7 @@ namespace Group1_Expense_Tracker.Controllers
                 // Step 4: Check if the email is verified
                 if (!user.IsEmailVerified)
                 {
+                    HttpContext.Session.SetString("FirebaseUserId", user.LocalId); //added this to determine which user is logged in for retrieval purposes
                     TempData["LoginSuccess"] = $"Welcome, {cred.Username}. You have logged in successfully!";
                     return RedirectToAction("Summary", "Analytics");
                 }
