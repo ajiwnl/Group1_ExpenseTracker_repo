@@ -156,12 +156,18 @@ namespace Group1_Expense_Tracker.Controllers
             }
         }
 
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
-          // await _firebaseauth.SignOutAsync(); (Error in this part need to be fixed)
+            // Clear the user's authentication cookie or session
+            HttpContext.Session.Clear(); // If using session
+
+            // Clear authentication cookie (if using cookies)
+            HttpContext.Response.Cookies.Delete(".AspNetCore.Identity.Application");
+
             TempData["LogoutMessage"] = "You have successfully logged out.";
             return RedirectToAction("Login", "Credentials");
         }
+
 
     }
 }
