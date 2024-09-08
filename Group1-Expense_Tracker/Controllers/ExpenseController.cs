@@ -1,4 +1,5 @@
 ﻿using Google.Cloud.Firestore;
+using Group1_Expense_Tracker.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -12,7 +13,6 @@ namespace Group1_Expense_Tracker.Controllers
         {
             _firestoreDb = firestoreDb;
         }
-
         public async Task<IActionResult> Details()
         {
             ViewData["ActivePage"] = "Expense";
@@ -25,23 +25,45 @@ namespace Group1_Expense_Tracker.Controllers
 
             try
             {
-                DocumentReference userDocRef = _firestoreDb.Collection("Users").Document(userId);
-                CollectionReference categoryCollectionRef = userDocRef.Collection("Category");
-                QuerySnapshot categorySnapshot = await categoryCollectionRef.GetSnapshotAsync();
+                // Fetch the Category collection and filter by the logged-in UserId
+                CollectionReference categoryCollectionRef = _firestoreDb.Collection("Category");
+                QuerySnapshot categorySnapshot = await categoryCollectionRef
+                    .WhereEqualTo("UserId", userId)
+                    .GetSnapshotAsync();
 
-                var categories = categorySnapshot.Documents
-                    .Select(doc => doc.GetValue<string>("CategoryName"))
-                    .ToList();
+                var categories = new List<string>();
 
+                if (categorySnapshot.Documents.Any())
+                {
+                    // Assuming there is only one document per user, you can access the first document
+                    var categoryDoc = categorySnapshot.Documents.First();
+
+                    // Log document data for debugging
+                    Console.WriteLine($"Document Data: {categoryDoc.ToDictionary()}");
+
+                    // Retrieve the CategoryNames array
+                    var categoryNames = categoryDoc.GetValue<List<object>>("CategoryNames");
+
+                    // Convert each item in the array to a string and add it to the categories list
+                    categories = categoryNames.Select(item => item.ToString()).ToList();
+                }
+                else
+                {
+                    Console.WriteLine("No category documents found.");
+                }
+
+                // Pass the categories to the view
                 ViewData["Categories"] = categories;
                 return View();
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "An error occurred: " + ex.Message;
+                ViewData["Categories"] = new List<string>();
                 return View();
             }
         }
+
 
         public async Task<IActionResult> AddExpense(string categoryName, string title, double amount, DateTime date, string description)
         {
@@ -54,29 +76,46 @@ namespace Group1_Expense_Tracker.Controllers
             if (string.IsNullOrEmpty(categoryName))
             {
                 ViewData["CategoryError"] = "Please select a category.";
-                return View("Details", ViewData["Categories"]);
+                return RedirectToAction("Details");
             }
 
             try
             {
-                DocumentReference userDocRef = _firestoreDb.Collection("Users").Document(userId);
-                CollectionReference categoryCollectionRef = userDocRef.Collection("Category");
+                // Access the Category collection directly
+                CollectionReference categoryCollectionRef = _firestoreDb.Collection("Category");
 
-                // Log the query for categories
-                Console.WriteLine("Fetching categories for userId: " + userId);
+                // Query the Category collection to find the category with the specified name and userId
+                QuerySnapshot categorySnapshot = await categoryCollectionRef
+                    .WhereEqualTo("UserId", userId)
+                    .WhereArrayContains("CategoryNames", categoryName)
+                    .GetSnapshotAsync();
 
-                QuerySnapshot categorySnapshot = await categoryCollectionRef.WhereEqualTo("CategoryName", categoryName).GetSnapshotAsync();
                 Console.WriteLine("Category Snapshot Count: " + categorySnapshot.Documents.Count);
 
-                DocumentReference categoryDocRef = categorySnapshot.Documents.FirstOrDefault()?.Reference;
-
-                if (categoryDocRef != null)
+                if (categorySnapshot.Documents.Any())
                 {
                     Console.WriteLine("Category found: " + categoryName);
 
-                    CollectionReference expensesCollectionRef = categoryDocRef.Collection("Expenses");
+                    // Create a new expense using the model
+                    Expense newExpense = new Expense
+                    {
+                        Title = title,
+                        Amount = amount,
+                        Date = Timestamp.FromDateTime(date.ToUniversalTime()),
+                        Description = description,
+                        UserId = userId,
+                        CategoryName = categoryName  // Add the category name to link it
+                    };
 
-                    QuerySnapshot expenseSnapshot = await expensesCollectionRef.WhereEqualTo("Title", title).GetSnapshotAsync();
+                    // Access the Expenses collection directly
+                    CollectionReference expensesCollectionRef = _firestoreDb.Collection("Expenses");
+
+                    // Check if the expense already exists
+                    QuerySnapshot expenseSnapshot = await expensesCollectionRef
+                        .WhereEqualTo("UserId", userId)
+                        .WhereEqualTo("Title", title)
+                        .WhereEqualTo("CategoryName", categoryName)
+                        .GetSnapshotAsync();
 
                     if (expenseSnapshot.Documents.Any())
                     {
@@ -84,13 +123,8 @@ namespace Group1_Expense_Tracker.Controllers
                         return RedirectToAction("Details");
                     }
 
-                    await expensesCollectionRef.AddAsync(new
-                    {
-                        Title = title,
-                        Amount = amount,
-                        Date = Timestamp.FromDateTime(date.ToUniversalTime()),
-                        Description = description
-                    });
+                    // Add the new expense to the Firestore collection
+                    await expensesCollectionRef.AddAsync(newExpense);
 
                     TempData["SuccessMessage"] = "Expense added successfully!";
                 }
