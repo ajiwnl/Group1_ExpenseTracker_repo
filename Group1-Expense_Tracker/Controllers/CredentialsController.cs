@@ -115,7 +115,7 @@ namespace Group1_Expense_Tracker.Controllers
                 // Step 5: Check if the email is verified
                 if (!user.IsEmailVerified)
                 {
-                    // Simulate sign out by clearing session data or tokens
+                    // Sign out by clearing session data or tokens
                     HttpContext.Session.Remove("FirebaseUserId");
                     TempData["EmailVerifyError"] = "Email not verified. Please verify your email before logging in.";
                     return View(cred);
